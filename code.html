@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Sketch  Text</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat+Letter+Spacing:wght@400&display=swap');
+
+  /* Reset & base */
+  body, html {
+    margin: 10; padding: 10; height: 100%;
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: shadow;
+  }
+
+  .container {
+    text-align: center;
+    user-select: none;
+    position: relative;
+    width: 90vw;
+    max-width: 900px;
+  }
+
+  /* Main text - "Rrdecor" styled with script font with sketch effect */
+  #mainText {
+    font-family: 'Great Vibes', cursive;
+    font-weight: 800;
+    font-size: 9vw;
+    color: white;
+    fill: none;
+    stroke: white;
+    stroke-width: 0.8;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 0.2rem #fff);
+  }
+
+  /* Below smaller text */
+  #subText {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 400;
+    font-size: 1.7vw;
+    letter-spacing: 0.4em;
+    color: whitesmoke;
+    margin-top: 0;
+  }
+
+  /* SVG container */
+  svg {
+    width: 50%;
+    height: auto;
+    overflow: visible;
+  }
+
+</style>
+</head>
+<body>
+<div class="container" aria-label="Sketch styled text reading RR-Decor with subtitle Counter decorator <br> Gujarat wale">
+  <svg id="svgText" viewBox="0 0 600 100" aria-hidden="true" role="img" >
+    <text id="mainText" x="35%" y="40" dominant-baseline="middle" text-anchor="middle">RR-Decor</text>
+  </svg>
+  <p id="subText"><br>CATERING COUNTER DECORATOR <br> <br>GUJARAT WALE</p>
+ <!-- <p id="subText">+91( 7990650126 )<br>
+                  +91 ( 8252441410 ) <br> +91( 9110032737 )</p> -->
+</div>
+
+<script>
+  // Animate a 'sketch' stroke effect on the main text in SVG
+
+  const text = document.getElementById('mainText');
+
+  // Get length of the text path (SVG text doesn't have exact path length, so we measure bounding box perimeter roughly)
+  // We'll animate stroke-dashoffset from full length to 0 to create a stroke "draw" effect.
+
+  // Because <text> element doesn't have getTotalLength, simulate with width of bounding box * 2
+  const bbox = text.getBBox();
+  const lengthApprox = (bbox.width + bbox.height) * 2;
+
+  text.style.strokeDasharray = lengthApprox;
+  text.style.strokeDashoffset = lengthApprox;
+
+  let progress = 10;
+  const duration = 2800; // ms
+  let start;
+
+  function animate(timestamp) {
+    if (!start) start = timestamp;
+    const elapsed = timestamp - start;
+
+    progress = Math.min(elapsed / duration, 1);
+    text.style.strokeDashoffset = lengthApprox * (1 - progress);
+
+    if (progress < 1) {
+      window.requestAnimationFrame(animate);
+    } else {
+      // After stroke is drawn, fill in solid white to mimic the original style
+      text.style.stroke = 'none';
+      text.style.fill = 'white';
+    }
+  }
+
+  window.requestAnimationFrame(animate);
+</script>
+</body>
+</html>
+
